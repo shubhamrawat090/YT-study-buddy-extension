@@ -1,64 +1,70 @@
-// contentScript.js
-// This script will run on YouTube playlist pages
+console.log("in contentScript.js");
 
-// Function to calculate total duration
-function calculateTotalDuration() {
-    let videoDurations = document.querySelectorAll('span.ytd-thumbnail-overlay-time-status-renderer');
-    let totalDurationSeconds = 0;
-  
-    videoDurations.forEach((duration, idx) => {
-      let durationText = duration.textContent.trim();
-      console.log(idx, " : ", durationText)
-      let [minutes, seconds] = durationText.split(':').map(Number);
-      totalDurationSeconds += minutes * 60 + seconds;
-    });
-  
-    return totalDurationSeconds;
-  }
-
-  // Function to calculate total duration when video durations are available
-function calculateTotalDurationWhenAvailable() {
-    let videoDurations = document.querySelectorAll('.ytd-thumbnail-overlay-time-status-renderer');
-    console.log({videoDurations})
-    
-    if (videoDurations.length > 0) {
-      // Video durations are available, calculate total duration
-      let totalDuration = calculateTotalDuration();
-      console.log('Total duration(items not found):', totalDuration);
-    } else {
-      // If video durations are not available, observe DOM changes
-      let observer = new MutationObserver((mutationsList, observer) => {
-        for(let mutation of mutationsList) {
-            if (mutation.type === 'childList' && mutation.target.classList.contains('ytd-thumbnail-overlay-time-status-renderer')) {
-              console.log({mutation})
-            // Video durations are now available, calculate total duration
-            let totalDuration = calculateTotalDuration();
-            console.log('Total duration(items found):', totalDuration);
-            observer.disconnect(); // Disconnect observer once the calculation is done
-            break;
-          }
+// Create a MutationObserver instance, helps in waiting for a specific element to be loaded
+const observer = new MutationObserver(function (mutations) {
+  mutations.forEach(function (mutation) {
+    // Check if the mutation involves added nodes
+    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+      // Iterate through added nodes
+      let timerSpanFound = false;
+      mutation.addedNodes.forEach(function (node) {
+        // Check if the added node matches the target class
+        if (node.classList && node.classList.contains('style-scope') && node.classList.contains('ytd-thumbnail-overlay-time-status-renderer')) {
+          timerSpanFound = true;
         }
       });
-  
-      // Start observing changes in the DOM
-      observer.observe(document.body, { childList: true, subtree: true });
+
+      // Don't want to calls on each timer being loaded. Just after the last one is loaded
+      if (timerSpanFound) {
+        contentLoaded();
+      }
     }
-  }
-  
-  // Display total duration on the page
-  function displayTotalDuration(totalDurationSeconds) {
-    let playlistHeader = document.querySelector('.metadata-buttons-wrapper .style-scope .ytd-playlist-header-renderer');
-    if (playlistHeader) {
-      let durationText = `${Math.floor(totalDurationSeconds / 60)} minutes ${totalDurationSeconds % 60} seconds`;
-      let totalDurationElement = document.createElement('span');
-      totalDurationElement.textContent = `Total Duration: ${durationText}`;
-      playlistHeader.appendChild(totalDurationElement);
+  });
+});
+
+// Start observing mutations in the entire document body
+observer.observe(document.body, { subtree: true, childList: true });
+
+// Handle tab closures and page refreshes
+window.addEventListener('beforeunload', function (event) {
+  // Disconnect the observer to clean up resources
+  observer.disconnect();
+});
+
+function contentLoaded() {
+  // check if a valid YT page
+
+  // BOOKMARKING LOGIC FOR YT VIDEO PAGE
+
+  // TIME CALCULATING LOGIC FOR YT PLAYLIST PAGE
+  // check if a YT playlist page and send the timestamps to background.js
+  // background.js will calculate the time and send back to contentScript
+  // on receiving the calculation the contentScript injects that into the YT playlist page
+
+  const url = window.location.href;
+  if (isYoutubePlaylistUrl(url)) {
+    // get the timestamp spans
+    const timerClass = ".ytd-thumbnail-overlay-time-status-renderer";
+
+    const timerSpans = document.querySelectorAll(timerClass);
+    let count = 0;
+    for (let i = 0; i < timerSpans.length; i++) {
+      const timer = timerSpans[i];
+      if(timer) {
+        console.log(timer.innerText)
+        count++;
+      }
     }
+
+    console.log("count: ", count);
+
+
+  } else {
+    console.log("Invalid Playlist URL")
   }
-  
-  // Calculate total duration and display it
-//   let totalDuration = calculateTotalDuration();
-  // Call the function to calculate total duration when the content is available
-  calculateTotalDurationWhenAvailable();
-//   displayTotalDuration(totalDuration);
-  
+}
+
+
+function isYoutubePlaylistUrl(url) {
+  return url && url.includes("youtube.com/playlist?");
+}

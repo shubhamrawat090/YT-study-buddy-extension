@@ -1,3 +1,6 @@
 REFER THIS 
 https://chromewebstore.google.com/detail/jhfahkaicjepfiefagkgececdnlchlbl
 https://github.com/shubhamrawat090/Browser-Extension-YouTube-Playlist-Calculator
+
+https://chromewebstore.google.com/detail/youtube-playlist-duration/pijbakhgmhhadeakaocjfockpndcpobk
+https://github.com/nrednav/youtube-playlist-duration-calculator/blob/master/src/content.js
