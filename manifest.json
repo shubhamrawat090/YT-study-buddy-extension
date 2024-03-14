@@ -2,11 +2,7 @@
   "manifest_version": 3,
   "name": "YouTube Study-Buddy Extension",
   "version": "1.0",
-  "permissions": [
-    "scripting",
-    "activeTab",
-    "tabs"
-  ],
+  "permissions": ["scripting", "activeTab", "tabs"],
   "action": {
     "default_popup": "popup.html"
   },
@@ -15,12 +11,9 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "*://www.youtube.com/*"
-      ],
-      "js": [
-        "contentScript.js"
-      ],
+      "matches": ["*://www.youtube.com/*"],
+      "js": ["contentScript.js"],
+      "css": ["styles.css"],
       "run_at": "document_end"
     }
   ],

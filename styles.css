@@ -1,0 +1,15 @@
+.durationAt1_5x,
+.durationAt2x,
+.duration {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.durationTable {
+  border-collapse: collapse;
+}
+
+.durationTable td {
+  padding: 0.5rem;
+  border: 1px solid;
+}
