@@ -189,6 +189,19 @@ function injectDataToWebpage() {
           </td>
         </tr>
       </table>
+
+      <div class='durationSelector'>
+        <select id='durationSelect'>
+          <option value="0.25">0.25x</option>
+          <option value="0.5">0.5x</option>
+          <option value="0.75">0.75x</option>
+          <option value="1" selected>Normal</option>
+          <option value="1.25">1.25x</option>
+          <option value="1.5">1.5x</option>
+          <option value="1.75">1.75x</option>
+          <option value="2">2x</option>
+        </select>
+      </div>
       
       <div class="videosCounted">Videos Counted: ${videosCounted}</div>
       <div class="videosNotCounted">Videos NOT Counted: ${videosNotCounted}</div>
@@ -201,6 +214,12 @@ function injectDataToWebpage() {
     `;
 
   metaDataDiv.children[0].insertAdjacentHTML("afterend", reqdDiv);
+}
+
+// Define getDuration outside of any other function
+function getDuration() {
+  const select = document.getElementById('durationSelect');
+  console.log("select: ", select)
 }
 
 if (isPlaylistPage()) {
@@ -225,5 +244,15 @@ if (isPlaylistPage()) {
   window.addEventListener("beforeunload", function (event) {
     // Disconnect the observer when the tab is refreshed or closed
     observer.disconnect();
+  });
+
+  // Event delegation for dynamically added elements
+  // Because simply adding onchange on the dynamically injected HTML doesn't work
+  document.addEventListener('change', function(event) {
+    const target = event.target;
+    if (target && target.id === 'durationSelect') {
+      // Call the function when the select element is changed
+      getDuration();
+    }
   });
 }
