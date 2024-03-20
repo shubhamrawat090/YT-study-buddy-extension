@@ -1,6 +1,7 @@
 let totalTimeInSec = 0;
 let videosCounted = 0;
 let videosNotCounted = 0;
+let selectedScale = 0;
 
 // Check if it's a Playlist Page
 function isPlaylistPage() {
@@ -16,7 +17,7 @@ function retrieveTimestamps() {
   videosCounted = 0;
   videosNotCounted = 0;
 
-  videos.forEach((video, idx) => {
+  videos.forEach((video) => {
     if (!video) return;
     const thumbnail = video.querySelector("#overlays.ytd-thumbnail");
 
@@ -66,9 +67,15 @@ function retrieveTimestamps() {
   videosCounted = videos.length;
   videosNotCounted = totalVideos - videosCounted;
 
-  injectDataToWebpage();
+  // Initially, we show normal/1x duration. 
+  if(selectedScale === 0) selectedScale = 1; // If no scale is selected we set it to 1 otherwise we take the value already present.
+  injectDataToWebpage(); 
 }
 
+/* 
+  User can select amongst different scales (0.25, 0.5, 1, 1.5, 2) and 
+  this function will recalculate and print that value.
+*/
 function secToDayHrMinSec(sec) {
   // Steps for 49hr, 120min, 92 sec  ==> 2 days, 3 hr, 3 min, 2 sec
   // handle seconds only
@@ -99,127 +106,99 @@ function secToDayHrMinSec(sec) {
 }
 
 function injectDataToWebpage() {
+  // Remove the previously injected stats(if they already exist)
   const metaDataDiv = document.querySelector(".metadata-wrapper");
   const elemPresent = metaDataDiv.querySelector("#yt-study-buddy-stats");
   if (elemPresent) {
     metaDataDiv.removeChild(elemPresent);
   }
 
-  // Duration at normal speed
-  var { days, hrs, min, sec } = secToDayHrMinSec(totalTimeInSec);
-
-  let daySum = days;
-  let hourSum = hrs;
-  let minSum = min;
-  let secSum = sec;
-
-  // Create an array to store non-empty elements
-  const elements = [];
-
-  // Push non-empty elements into the array
-  if (daySum !== 0) elements.push(`<div>${daySum} days</div>`);
-  if (hourSum !== 0) elements.push(`<div>${hourSum} hours</div>`);
-  if (minSum !== 0) elements.push(`<div>${minSum} mins</div>`);
-  if (secSum !== 0) elements.push(`<div>${secSum} sec</div>`);
-
-  console.log({ daySum, hourSum, minSum, secSum });
-  console.log({ videosCounted, videosNotCounted });
-
-  // Duration at 1.5x
-  let secAt1_5x = Math.ceil(totalTimeInSec / 1.5);
-  var { days, hrs, min, sec } = secToDayHrMinSec(secAt1_5x);
-
-  let daySumAt1_5x = days;
-  let hourSumAt1_5x = hrs;
-  let minSumAt1_5x = min;
-  let secSumAt1_5x = sec;
-
-  // Create an array to store non-empty elements
-  const elementsAt1_5x = [];
-
-  // Push non-empty elements into the array
-  if (daySumAt1_5x !== 0)
-    elementsAt1_5x.push(`<div>${daySumAt1_5x} days</div>`);
-  if (hourSumAt1_5x !== 0)
-    elementsAt1_5x.push(`<div>${hourSumAt1_5x} hours</div>`);
-  if (minSumAt1_5x !== 0)
-    elementsAt1_5x.push(`<div>${minSumAt1_5x} mins</div>`);
-  if (secSumAt1_5x !== 0) elementsAt1_5x.push(`<div>${secSumAt1_5x} sec</div>`);
-
-  // Duration at 2x
-  let secAt2x = Math.ceil(totalTimeInSec / 2);
-  var { days, hrs, min, sec } = secToDayHrMinSec(secAt2x);
-
-  let daySumAt2x = days;
-  let hourSumAt2x = hrs;
-  let minSumAt2x = min;
-  let secSumAt2x = sec;
-
-  // Create an array to store non-empty elements
-  const elementsAt2x = [];
-
-  // Push non-empty elements into the array
-  if (daySumAt2x !== 0) elementsAt2x.push(`<div>${daySumAt1_5x} days</div>`);
-  if (hourSumAt2x !== 0) elementsAt2x.push(`<div>${hourSumAt2x} hours</div>`);
-  if (minSumAt2x !== 0) elementsAt2x.push(`<div>${minSumAt2x} mins</div>`);
-  if (secSumAt2x !== 0) elementsAt2x.push(`<div>${secSumAt2x} sec</div>`);
+  const {days, hrs, min, sec} = scaleDuration(selectedScale);
+  const elementsToPush = [];
+  if(days !== 0) elementsToPush.push(`<div>${days} days</div>`);
+  if(hrs !== 0) elementsToPush.push(`<div>${hrs} hours</div>`);
+  if(min !== 0) elementsToPush.push(`<div>${min} mins</div>`);
+  if(sec !== 0) elementsToPush.push(`<div>${sec} sec</div>`);
 
   // Construct reqdDiv with non-empty elements
   const reqdDiv = `
     <div id="yt-study-buddy-stats">
-      <div class="duration">
-        ${elements.join("")}
-      </div>
-
-      <table class="durationTable">
-        <tr>
-          <td>At 1.5x</td>
-          <td>
-            <div class="durationAt1_5x">
-            ${elementsAt1_5x.join("")}
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>At 2x</td>
-          <td>
-            <div class="durationAt2x">
-            ${elementsAt2x.join("")}
-            </div>
-          </td>
-        </tr>
-      </table>
-
       <div class='durationSelector'>
         <select id='durationSelect'>
-          <option value="0.25">0.25x</option>
-          <option value="0.5">0.5x</option>
-          <option value="0.75">0.75x</option>
-          <option value="1" selected>Normal</option>
-          <option value="1.25">1.25x</option>
-          <option value="1.5">1.5x</option>
-          <option value="1.75">1.75x</option>
-          <option value="2">2x</option>
+          <option value="0.25" ${selectedScale === 0.25 ? 'selected' : ''}>0.25x</option>
+          <option value="0.5" ${selectedScale === 0.5 ? 'selected' : ''}>0.5x</option>
+          <option value="0.75" ${selectedScale === 0.75 ? 'selected' : ''}>0.75x</option>
+          <option value="1" ${selectedScale === 1 ? 'selected' : ''}>Normal</option>
+          <option value="1.25" ${selectedScale === 1.25 ? 'selected' : ''}>1.25x</option>
+          <option value="1.5" ${selectedScale === 1.5 ? 'selected' : ''}>1.5x</option>
+          <option value="1.75" ${selectedScale === 1.75 ? 'selected' : ''}>1.75x</option>
+          <option value="2" ${selectedScale === 2 ? 'selected' : ''}>2x</option>
         </select>
+        <span class="duration">${elementsToPush.join("")}</span>
       </div>
-      
-      <div class="videosCounted">Videos Counted: ${videosCounted}</div>
-      <div class="videosNotCounted">Videos NOT Counted: ${videosNotCounted}</div>
+      <div class="videosCounted">Videos Counted: <span>${videosCounted}</span></div>
+      <div class="videosNotCounted">Videos NOT Counted: <span>${videosNotCounted}</span></div>
       ${
-        videosNotCounted !== 0
-          ? `<div class="scroll-msg">Scroll down to count more videos</div>`
-          : ""
+        videosNotCounted !== 0 
+        ? `<div class="scroll-msg">
+            <svg id="scroll-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+            </svg>
+            <svg id="scroll-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+            </svg>
+
+            <span id="scroll-text">Scroll down to count more videos</span>
+
+            <svg id="scroll-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+            </svg>
+            <svg id="scroll-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+            </svg>
+          </div>`
+        : ""
       }
     </div>
-    `;
+  `;
 
-  metaDataDiv.children[0].insertAdjacentHTML("afterend", reqdDiv);
+  metaDataDiv.children[2].insertAdjacentHTML("afterend", reqdDiv);
+}
+
+function scaleDuration(scaleVal) {
+  let totalSecByScale = Math.ceil(totalTimeInSec / scaleVal);
+  var { days, hrs, min, sec } = secToDayHrMinSec(totalSecByScale);
+
+  let calcDays = days;
+  let calcHours = hrs;
+  let calcMinutes = min;
+  let calcSeconds = sec;
+
+  return {
+    days: calcDays,
+    hrs: calcHours,
+    min: calcMinutes,
+    sec: calcSeconds
+  }
 }
 
 // Define getDuration outside of any other function
 function getDuration() {
   const select = document.getElementById('durationSelect');
-  console.log("select: ", select)
+  selectedScale = Number(select.value);
+  const {days, hrs, min, sec} = scaleDuration(selectedScale);
+  const elementsToPush = [];
+  if(days !== 0) elementsToPush.push(`<div>${days} days</div>`);
+  if(hrs !== 0) elementsToPush.push(`<div>${hrs} hours</div>`);
+  if(min !== 0) elementsToPush.push(`<div>${min} mins</div>`);
+  if(sec !== 0) elementsToPush.push(`<div>${sec} sec</div>`);
+
+  const durationDiv = document.querySelector('.duration');
+  durationDiv.innerHTML = elementsToPush.join("");
+}
+
+function scrollToBottom() {
+  // NEED TO WRITE ITS DEFINITION
 }
 
 if (isPlaylistPage()) {
@@ -255,4 +234,14 @@ if (isPlaylistPage()) {
       getDuration();
     }
   });
+
+  document.addEventListener('click', function(event) {
+    const target = event.target;
+    console.log(target)
+    if(target && target.classList.contains('scroll-msg') || target.id === 'scroll-text' || target.id === 'scroll-icon') {
+      console.log("IInside")
+      // On clicking the scroll message it automatically scrolls to the bottom of the page to load new videos
+      scrollToBottom();
+    }
+  })
 }
