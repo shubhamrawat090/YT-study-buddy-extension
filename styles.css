@@ -1,4 +1,5 @@
 #yt-study-buddy-stats {
+  margin-top: 1rem;
   padding: 1rem;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 1rem;
@@ -19,7 +20,11 @@
   gap: 0.5rem;
   font-size: 2rem;
   font-weight: 900;
-  background-image: linear-gradient(90deg, rgba(37, 255, 4, 1) 0%, rgba(228, 255, 186, 1) 100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(37, 255, 4, 1) 0%,
+    rgba(228, 255, 186, 1) 100%
+  );
   background-clip: text;
   color: transparent;
 }
@@ -35,6 +40,11 @@
   cursor: pointer;
 }
 
+#durationSelect option {
+  background-color: white;
+  color: black;
+}
+
 .videosCounted {
   font-size: 1.5rem;
   display: flex;
@@ -45,7 +55,11 @@
 .videosCounted span {
   font-size: 2rem;
   font-weight: 900;
-  background-image: linear-gradient(90deg, #f1c40f 0%, rgba(255,252,186,1) 100%);
+  background-image: linear-gradient(
+    90deg,
+    #f1c40f 0%,
+    rgba(255, 252, 186, 1) 100%
+  );
   background-clip: text;
   color: transparent;
 }
