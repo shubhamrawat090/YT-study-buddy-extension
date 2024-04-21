@@ -13,6 +13,7 @@ function main() {
   let videosCounted = 0;
   let videosNotCounted = 0;
   let selectedScale = 0;
+  let videoCardHeight = 0;
 
   // Check if it's a Playlist Page
   function isPlaylistPage() {
@@ -59,6 +60,8 @@ function main() {
         totalTimeInSec += Number(min) * 60;
         totalTimeInSec += Number(sec);
       }
+
+      videoCardHeight = video.clientHeight;
     });
 
     /* 
@@ -207,10 +210,6 @@ function main() {
     durationDiv.innerHTML = elementsToPush.join("");
   }
 
-  function scrollToBottom() {
-    // NEED TO WRITE ITS DEFINITION
-  }
-
   if (isPlaylistPage()) {
     const callback = function (mutationsList, observer) {
       // PROBLEM: This wait for the first timestamp element to render on page and then breaks. I want it to wait for the last one
@@ -250,6 +249,16 @@ function main() {
       if (target && target.classList.contains('scroll-msg') || target.id === 'scroll-text' || target.id === 'scroll-icon') {
         // On clicking the scroll message it automatically scrolls to the bottom of the page to load new videos
         scrollToBottom();
+
+        function scrollToBottom() {
+          /* 
+            Lets say there are 20 videos loaded and 10 more to load.
+            So, we need to scroll to 20 videos worth of height(height of 1 video * no. of videos: 20 here) to load next 10 video due to pagination by youtube.
+          */
+          const scrollHeight = videoCardHeight * (videosCounted + videosNotCounted);
+          // NEED TO WRITE ITS DEFINITION
+          window.scrollTo({ top: scrollHeight, behavior: 'smooth' });
+        }
       }
     })
   }
