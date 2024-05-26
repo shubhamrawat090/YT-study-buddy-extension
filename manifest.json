@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "YT Study-Buddy Extension",
   "version": "1.0",
-  "permissions": ["scripting", "activeTab", "tabs"],
+  "permissions": ["tabs"],
   "action": {
     "default_popup": "popup.html"
   },
