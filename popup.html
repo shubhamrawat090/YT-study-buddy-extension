@@ -3,11 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Youtube Study-Buddy Extension</title>
+    <title>YT Study-Buddy</title>
     <link rel="stylesheet" href="styles.css">
     <script src="popup.js" defer></script>
 </head>
-<body>
-    HI
+<body class="popup-body">
+    <header class="popup-header">
+        <h1>YT Study-Buddy</h1>
+        <p class="popup-subtitle">Playlist duration calculator</p>
+    </header>
+
+    <label class="toggle-row" id="inPageToggleRow">
+        <span class="toggle-label">Show stats on playlist page</span>
+        <input type="checkbox" id="inPageToggle" checked />
+    </label>
+
+    <p id="statusMessage" class="status-message" hidden></p>
+
+    <div id="statsPanel" class="stats-panel" hidden>
+        <div class="durationSelector">
+            <label for="durationSelect">Playback speed</label>
+            <select id="durationSelect">
+                <option value="0.25">0.25x</option>
+                <option value="0.5">0.5x</option>
+                <option value="0.75">0.75x</option>
+                <option value="1">Normal (1x)</option>
+                <option value="1.25">1.25x</option>
+                <option value="1.5">1.5x</option>
+                <option value="1.75">1.75x</option>
+                <option value="2">2x</option>
+            </select>
+        </div>
+
+        <div id="durationDisplay" class="duration" aria-live="polite"></div>
+
+        <div class="videosCounted">
+            Videos counted: <span id="videosCounted">0</span>
+        </div>
+        <div class="videosNotCounted">
+            Videos not counted: <span id="videosNotCounted">0</span>
+        </div>
+
+        <p class="popup-hint">
+            Estimates watch time at the selected speed. Does not change YouTube playback.
+        </p>
+
+        <button type="button" id="scrollBtn" class="scroll-btn" hidden>
+            Scroll playlist to load more
+        </button>
+        <button type="button" id="refreshBtn" class="refresh-btn">Refresh stats</button>
+    </div>
 </body>
 </html>

@@ -1,24 +1,188 @@
+.popup-body {
+  margin: 0;
+  min-width: 320px;
+  max-width: 360px;
+  padding: 1rem 1.1rem 1.2rem;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: #0f0f0f;
+  background: #fff;
+}
+
+.popup-header h1 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.popup-subtitle {
+  margin: 0.25rem 0 0.75rem;
+  font-size: 0.85rem;
+  color: #606060;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 0.5rem;
+  background: #f5f5f5;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-label {
+  font-size: 0.9rem;
+  color: #0f0f0f;
+}
+
+#inPageToggle {
+  width: 1.1rem;
+  height: 1.1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.status-message {
+  margin: 0.5rem 0;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  background: #e8f4fd;
+  color: #065fd4;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.status-message.status-error {
+  background: #fdecea;
+  color: #c5221f;
+}
+
+.stats-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.durationSelector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.durationSelector label {
+  font-size: 0.85rem;
+  color: #606060;
+}
+
+#durationSelect {
+  outline: none;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #0f0f0f;
+  padding: 0.45rem 0.5rem;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.duration {
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.35;
+  background-image: linear-gradient(
+    90deg,
+    #15803d 0%,
+    #65a30d 100%
+  );
+  background-clip: text;
+  color: transparent;
+}
+
+.videosCounted,
+.videosNotCounted {
+  font-size: 0.95rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.videosCounted span {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #ca8a04;
+}
+
+.videosNotCounted span {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #dc2626;
+}
+
+.popup-hint {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #606060;
+  line-height: 1.35;
+}
+
+.scroll-btn,
+.refresh-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.scroll-btn {
+  background: #065fd4;
+  color: #fff;
+}
+
+.scroll-btn:hover {
+  background: #0550b5;
+}
+
+.refresh-btn {
+  background: #f2f2f2;
+  color: #0f0f0f;
+}
+
+.refresh-btn:hover {
+  background: #e5e5e5;
+}
+
+/* Injected panel on YouTube playlist pages */
+yt-flexible-actions-view-model > #yt-study-buddy-stats {
+  flex-basis: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 #yt-study-buddy-stats {
   margin-top: 1rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.12);
   border-radius: 1rem;
   gap: 1rem;
   display: flex;
   flex-direction: column;
 }
 
-.durationSelector {
+#yt-study-buddy-stats .durationSelector {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
-.duration {
+#yt-study-buddy-stats .duration {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem 0.5rem;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 900;
   background-image: linear-gradient(
     90deg,
@@ -29,31 +193,31 @@
   color: transparent;
 }
 
-#durationSelect {
+#yt-study-buddy-stats #durationSelect {
   outline: none;
-  user-select: none;
-  border: 1px solid;
-  background-color: rgba(0, 0, 0, 0.1);
-  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background-color: rgba(0, 0, 0, 0.2);
+  color: #fff;
   padding: 0.5rem;
-  border-radius: 0.2rem;
+  border-radius: 0.35rem;
   cursor: pointer;
 }
 
-#durationSelect option {
-  background-color: white;
-  color: black;
+#yt-study-buddy-stats #durationSelect option {
+  background-color: #fff;
+  color: #0f0f0f;
 }
 
-.videosCounted {
-  font-size: 1.5rem;
+#yt-study-buddy-stats .videosCounted {
+  font-size: 1rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
+  color: #fff;
 }
 
-.videosCounted span {
-  font-size: 2rem;
+#yt-study-buddy-stats .videosCounted span {
+  font-size: 1.35rem;
   font-weight: 900;
   background-image: linear-gradient(
     90deg,
@@ -64,37 +228,34 @@
   color: transparent;
 }
 
-.videosNotCounted {
-  font-size: 1.5rem;
+#yt-study-buddy-stats .videosNotCounted {
+  font-size: 1rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
+  color: #fff;
 }
 
-.videosNotCounted span {
-  font-size: 2rem;
+#yt-study-buddy-stats .videosNotCounted span {
+  font-size: 1.35rem;
   font-weight: 900;
   background-image: linear-gradient(90deg, #ff6d5d 0%, #ff8c7f 100%);
   background-clip: text;
   color: transparent;
 }
 
-.scroll-msg {
+#yt-study-buddy-stats .scroll-msg {
   text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
   color: #98e6fa;
-  margin-top: 2rem;
-  font-size: 2rem;
+  margin-top: 0.5rem;
+  font-size: 1rem;
   cursor: pointer;
-}
-
-.scroll-msg:hover {
   text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.scroll-msg svg {
-  height: 2rem;
+  text-underline-offset: 3px;
+  background: transparent;
+  border: none;
+  padding: 0.25rem 0;
+  width: 100%;
+  display: block;
+  font: inherit;
 }
